@@ -55,7 +55,7 @@ function FFmpegProcess:__init(path, rate, channels, position, errorHandler)
 	end)
 	-- local errstr = "";
 	stderr:read_start(function(err, chunk)
-		if err or (not chunk) then
+		if err or (not chunk) or self._closed then
 			return;
 		end
 		-- stderr:read_stop();
