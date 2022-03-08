@@ -4,6 +4,7 @@ require("containers/voice/FFmpegProcess");
 require("containers/voice/VoiceConnection");
 require("client");
 require("shard");
+require("webSocket");
 require("api9"); -- inject api 9
 require("containers/message");
 require("containers/textChannel");
