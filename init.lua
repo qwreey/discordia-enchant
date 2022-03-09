@@ -5,6 +5,7 @@ require("containers/voice/VoiceConnection");
 require("client");
 require("shard");
 require("webSocket");
+require("containers/voice/voiceServerUpdate");
 require("api9"); -- inject api 9
 require("containers/message");
 require("containers/textChannel");

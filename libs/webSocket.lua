@@ -53,7 +53,7 @@ local function wconnect(self, url, path)
 	end
 
 	if self.handleDisconnect then -- virtual method
-		return self:handleDisconnect(url, path, self._closeCode)
+		return self:handleDisconnect(url, path, tonumber(self._closeCode))
 	end
 
 end

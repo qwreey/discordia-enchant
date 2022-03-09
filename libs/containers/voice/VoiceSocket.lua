@@ -19,6 +19,25 @@ local function checkMode(modes)
 	end
 end
 
+function VoiceSocket:handleDisconnect(url, path, code)
+	-- TODO: reconnecting and resuming
+	local connection = self._connection
+	if code == 4014 then -- for reconnecting
+		local channel = connection._channel
+		if not channel then return end
+		self._reconnect = true
+		channel._connection = nil
+		channel._parent._oldConnection = connection
+		channel._parent._connection = nil
+		return
+	end
+	connection:_cleanup()
+end
+
+function VoiceSocket.__getters.reconnect(self)
+	return self._reconnect
+end
+
 function VoiceSocket:handlePayload(payload)
 
 	local manager = self._manager

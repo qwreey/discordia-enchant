@@ -70,6 +70,7 @@ function VoiceConnection:_play(stream, duration, position)
 	local udp, ip, port = self._udp, self._ip, self._port
 	local ssrc, key = self._ssrc, self._key
 	local encoder = self._encoder
+	local socket = self._socket;
 
 	local frame_size = SAMPLE_RATE * FRAME_DURATION / MS_PER_S
 	local pcm_len = frame_size * CHANNELS
@@ -87,6 +88,11 @@ function VoiceConnection:_play(stream, duration, position)
 	---CUSTOM PATCH
 
 	while elapsed < duration do
+
+		if socket._reconnect then
+			reason = "reconnecting"
+			break
+		end
 
 		---CUSTOM PATCH
 		local pcm = sread(stream,pcm_len)
@@ -188,4 +194,8 @@ function VoiceConnection:playFFmpeg(path, duration, position, errorHandler)
 	stream:close()
 	return elapsed, reason
 
+end
+
+function VoiceConnection.__getters.socket(self)
+	return self._socket
 end
