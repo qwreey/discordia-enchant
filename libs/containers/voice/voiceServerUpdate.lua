@@ -29,8 +29,12 @@ eventHandler.make("VOICE_SERVER_UPDATE",function (d, client)
         channel._connection = channel
     end
     guild._connection = connection
+	connection._ready = nil
 	local result = client._voice:_prepareConnection(state, connection)
 	if oldchannel and oldchannel ~= channel then
+		if not connection._ready then
+			connection:_await()
+		end
         client:emit("voiceConnectionMove",oldchannel,channel,result)
     end
     return result
