@@ -25,17 +25,14 @@ function VoiceSocket:handleDisconnect(url, path, code)
 	if code == 4014 then -- for reconnecting
 		local channel = connection._channel
 		if not channel then return end
-		self._reconnect = true
 		channel._connection = nil
-		channel._parent._oldConnection = connection
-		channel._parent._connection = nil
+		local guild = channel._parent
+		guild._reconnect = true
+		guild._connection = nil
+		guild._oldConnection = connection
 		return
 	end
 	connection:_cleanup()
-end
-
-function VoiceSocket.__getters.reconnect(self)
-	return self._reconnect
 end
 
 function VoiceSocket:handlePayload(payload)
@@ -73,7 +70,11 @@ function VoiceSocket:handlePayload(payload)
 	elseif op == DESCRIPTION then
 
 		if d.mode == self._mode then
-			self._connection:_prepare(d.secret_key, self)
+			local connection = self._connection
+			local prepare = connection._prepare or VoiceSocket._prepare
+			if connection and prepare then
+				prepare(connection,d.secret_key, self)
+			end
 		else
 			self:error('%q encryption mode not available', self._mode)
 			self:disconnect()

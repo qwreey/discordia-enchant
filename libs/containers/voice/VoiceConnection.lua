@@ -85,11 +85,12 @@ function VoiceConnection:_play(stream, duration, position)
 	local sread = stream.read
 	local encode = encoder.encode
 	local encrypt = sodium.encrypt
+	local guild = self._channel._parent;
 	---CUSTOM PATCH
 
 	while elapsed < duration do
 
-		if socket._reconnect then
+		if guild._reconnect then
 			reason = "reconnecting"
 			break
 		end
