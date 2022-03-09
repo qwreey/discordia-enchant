@@ -19,13 +19,13 @@ local actionRow = enums.componentType.actionRow;
 ---@param emojiObject enchent_button_props table that containing emoji data
 ---@return component_emoji
 function this.new(emojiObject)
-    if type(emojiObject) == "string" then
-        return {name = emojiObject};
-    end
-    return {
-        id = emojiObject.id;
-        name = emojiObject.name;
-    };
+	if type(emojiObject) == "string" then
+		return {name = emojiObject};
+	end
+	return {
+		id = emojiObject.id;
+		name = emojiObject.name;
+	};
 end
 
 return this;

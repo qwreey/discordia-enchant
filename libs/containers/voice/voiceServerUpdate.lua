@@ -21,15 +21,15 @@ eventHandler.make("VOICE_SERVER_UPDATE",function (d, client)
 	if not channel then return warning(client, 'GuildVoiceChannel', state.channel_id, 'VOICE_SERVER_UPDATE') end
 	local connection = channel._connection or guild._oldConnection;
 	if not connection then
-        return client:warning('Voice connection not initialized before VOICE_SERVER_UPDATE')
-    end
+		return client:warning('Voice connection not initialized before VOICE_SERVER_UPDATE')
+	end
 	local oldchannel = connection._channel
-    if oldchannel and oldchannel ~= channel then
-        oldchannel._connection = nil
-        connection._channel = channel
-        channel._connection = channel
-    end
-    guild._connection = connection
+	if oldchannel and oldchannel ~= channel then
+		oldchannel._connection = nil
+		connection._channel = channel
+		channel._connection = channel
+	end
+	guild._connection = connection
 	connection._ready = nil
 	local result = client._voice:_prepareConnection(state, connection)
 	if oldchannel and oldchannel ~= channel then
@@ -37,10 +37,10 @@ eventHandler.make("VOICE_SERVER_UPDATE",function (d, client)
 			connection:_await()
 		end
 		guild._reconnect = false
-        client:emit("voiceConnectionMove",oldchannel,channel,result)
+		client:emit("voiceConnectionMove",oldchannel,channel,result)
 	else guild._reconnect = false
-    end
-    return result
+	end
+	return result
 end)
 
 eventHandler.make("VOICE_STATE_UPDATE",function (d, client)

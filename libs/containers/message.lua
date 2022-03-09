@@ -75,9 +75,9 @@ function Message:_loadMore(data)
 		self._attachments = #data.attachments > 0 and data.attachments or nil
 	end
 
-    if data.components then
-        self._components = #data.components > 0 and data.components or nil
-    end
+	if data.components then
+		self._components = #data.components > 0 and data.components or nil
+	end
 
 end
 
@@ -96,7 +96,7 @@ function Message:update(data)
 	return self:_modify({
 		content = data.content or null,
 		embed = data.embed or null,
-        components = data.components or null,
+		components = data.components or null,
 	})
 end
 

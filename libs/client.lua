@@ -36,7 +36,7 @@ local defaultOptions = {
 	gatewayFile = 'gateway.json',
 	dateTime = '%F %T',
 	syncGuilds = false,
-    wssProps = {},
+	wssProps = {},
 }
 
 local function parseOptions(customOptions)

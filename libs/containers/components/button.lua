@@ -20,33 +20,33 @@ local messageComponent = enums.interactionType.messageComponent;
 ---@param props enchent_button_props struct of button object
 ---@return table
 function this.new(props)
-    props.type = button;
+	props.type = button;
 
-    local func = props.func;
-    if func then
-        allBindings[props.custom_id] = func;
-        props.func = nil;
-    end
-    return props;
+	local func = props.func;
+	if func then
+		allBindings[props.custom_id] = func;
+		props.func = nil;
+	end
+	return props;
 end
 
 local function runBindings(id,interaction)
-    local binding = allBindings[id];
-    if binding then
-        binding(interaction);
-    end
+	local binding = allBindings[id];
+	if binding then
+		binding(interaction);
+	end
 end
 local warp = coroutine.wrap;
 
 local evnetHandler = require("../../eventHandler");
 evnetHandler.make("INTERACTION_CREATE",function (data, client)
-    if data.type == messageComponent then -- button
-        local new = interaction(data,client);
-        local buttonId = new.buttonId;
-        warp(runBindings)(buttonId,new);
-        return true,client:emit('buttonPressed',buttonId,new);
-    end
-    return false;
+	if data.type == messageComponent then -- button
+		local new = interaction(data,client);
+		local buttonId = new.buttonId;
+		warp(runBindings)(buttonId,new);
+		return true,client:emit('buttonPressed',buttonId,new);
+	end
+	return false;
 end);
 
 return this;
