@@ -101,6 +101,7 @@ function interaction:ack()
 	end
 end
 
+local insert = table.insert;
 ---Create reply message.
 ---@param data table table of datas, same with message data
 ---@param private boolean|nil set reply is only can see by called user
@@ -114,6 +115,16 @@ function interaction:reply(data, private)
 
 	if private then
 		data.flags = 64
+	end
+
+	local embed = data.embed;
+	if embed then
+		local embeds = data.embeds;
+		if not embeds then
+			embeds = {};
+			data.embeds = embeds;
+		end
+		insert(embeds,1,embed);
 	end
 
 	if self._initialResponse then
