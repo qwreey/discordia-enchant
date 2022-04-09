@@ -146,6 +146,16 @@ function interaction:update(data)
 		}
 	end
 
+	local embed = data.embed;
+	if embed then
+		local embeds = data.embeds;
+		if not embeds then
+			embeds = {};
+			data.embeds = embeds;
+		end
+		insert(embeds,1,embed);
+	end
+
 	if self._isComponent then -- if it is component
 		return self:createResponse(updateMessage,data);
 	end
