@@ -32,6 +32,7 @@ eventHandler.make("VOICE_SERVER_UPDATE",function (d, client)
 	guild._connection = connection
 	connection._ready = nil
 	local result = client._voice:_prepareConnection(state, connection)
+	connection._disconnected = false;
 	if oldchannel and oldchannel ~= channel then
 		if not connection._ready then
 			connection:_await()

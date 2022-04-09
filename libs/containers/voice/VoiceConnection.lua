@@ -95,6 +95,11 @@ function VoiceConnection:_play(stream, duration, position)
 			break
 		end
 
+		if guild._disconnected then
+			reason = "disconnected"
+			break
+		end
+
 		---CUSTOM PATCH
 		local pcm = sread(stream,pcm_len)
 		---CUSTOM PATCH
