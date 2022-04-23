@@ -28,16 +28,18 @@ local reconnectCodes = {
 function VoiceSocket:handleDisconnect(url, path, code)
 	-- TODO: reconnecting and resuming
 	local connection = self._connection
-	connection._disconnected = true;
+	local channel = connection and connection._channel
+	local guild = channel and channel._parent
 	if (not code) or reconnectCodes[code] then -- for reconnecting
-		local channel = connection._channel
 		if not channel then return end
 		channel._connection = nil
-		local guild = channel._parent
+		if not guild then return end
 		guild._reconnect = true
 		guild._connection = nil
 		guild._oldConnection = connection
 		return
+	elseif guild then
+		guild._disconnected = true
 	end
 	connection:_cleanup()
 end
