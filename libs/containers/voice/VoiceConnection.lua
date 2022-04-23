@@ -70,8 +70,8 @@ function VoiceConnection:_play(stream, duration, position)
 	local udp, ip, port = self._udp, self._ip, self._port
 	local ssrc, key = self._ssrc, self._key
 	local encoder = self._encoder
-	local socket = self._socket;
 
+	local socket = self._socket;
 	local frame_size = SAMPLE_RATE * FRAME_DURATION / MS_PER_S
 	local pcm_len = frame_size * CHANNELS
 
