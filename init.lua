@@ -9,6 +9,7 @@ require("containers/voice/voiceServerUpdate");
 require("api9"); -- inject api 9
 require("containers/message");
 require("containers/textChannel");
+require("containers/guild");
 local eventHandler = require("eventHandler");
 local appliactionCommand = require("containers/appliactionCommand"); -- inject appliactionCommand into client
 

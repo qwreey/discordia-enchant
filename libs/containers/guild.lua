@@ -28,7 +28,7 @@ function Guild:createVoiceChannel(name)
     else
         data = {name = name};
     end
-    data.type = channelType.text;
+    data.type = channelType.voice;
 
 	local data, err = self.client._api:createGuildChannel(self._id, data);
 	if data then
