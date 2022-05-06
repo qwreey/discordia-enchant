@@ -58,6 +58,7 @@ function interaction:__init(data, parent)
 	end
 	messageObject = messageType == 19 and (channelObject and message and channelObject._messages:_insert(message))
 
+	self._locale = data.locale or "NONE"
 	self._user = userObject
 	self._guild = guildObject
 	self._channel = channelObject
@@ -269,6 +270,10 @@ end
 
 function interactionGetters:parentInteraction()
 	return self._parentInteraction
+end
+
+function interactionGetters:locale()
+	return self._locale
 end
 
 return interaction
