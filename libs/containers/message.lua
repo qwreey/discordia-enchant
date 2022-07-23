@@ -105,4 +105,14 @@ function Message.__getters.components(self)
 	return self._components
 end
 
+function Message:reply(content)
+	if type(content) == "string" then
+		content = {content = content}
+	end
+	if not content.reference then
+		content.reference = {message = self,mention = false}
+	end
+	return self._parent:send(content)
+end
+
 return Message

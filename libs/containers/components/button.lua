@@ -12,7 +12,7 @@ local messageComponent = enums.interactionType.messageComponent;
 ---@field public disabled boolean whether the component is disabled, default false
 ---@field public style enchent_enums_buttonStyle_child one of button styles
 ---@field public url string a url for link-style buttons
----@field public emoji Emoji name, id, and animated
+---@field public emoji Emoji|string name, id, and animated
 ---@field public label string text that appears on the button, max 80 characters
 ---@field public func function Making response
 

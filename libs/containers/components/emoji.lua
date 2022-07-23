@@ -1,5 +1,5 @@
 ---Handler for actionRow component
----@class component_emoji
+---@class component_emoji:string
 local this = {};
 local enums = require("../../enums");
 local actionRow = enums.componentType.actionRow;
@@ -16,7 +16,7 @@ local actionRow = enums.componentType.actionRow;
 -- available?	boolean	whether this emoji can be used, may be false due to loss of Server Boosts
 
 ---Create new emoji object
----@param emojiObject enchent_button_props table that containing emoji data
+---@param emojiObject enchent_button_props|string table that containing emoji data
 ---@return component_emoji
 function this.new(emojiObject)
 	if type(emojiObject) == "string" then
