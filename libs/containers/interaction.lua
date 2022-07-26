@@ -102,6 +102,17 @@ function interaction:ack()
 	end
 end
 
+local function copyData(data,isTable)
+	if isTable or type(data) == "table" then
+		local new = {}
+		for i,v in pairs(data) do
+			new[i] = v
+		end
+		return new
+	end
+	return data
+end
+
 local insert = table.insert;
 ---Create reply message.
 ---@param data table table of datas, same with message data
@@ -112,6 +123,7 @@ function interaction:reply(data, private)
 		data = {
 			content = data
 		}
+	else data = copyData(data)
 	end
 
 	if private then
