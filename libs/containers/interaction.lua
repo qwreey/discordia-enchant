@@ -137,7 +137,9 @@ function interaction:reply(data, private)
 			embeds = {};
 			data.embeds = embeds;
 		end
-		insert(embeds,1,embed);
+		if next(embed) then
+			insert(embeds,1,embed);
+		end
 	end
 
 	if self._initialResponse then
@@ -166,7 +168,9 @@ function interaction:update(data)
 			embeds = {};
 			data.embeds = embeds;
 		end
-		insert(embeds,1,embed);
+		if next(embed) then
+			insert(embeds,1,embed);
+		end
 	end
 
 	if self._isComponent then -- if it is component
