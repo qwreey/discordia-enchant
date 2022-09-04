@@ -25,6 +25,10 @@ return {
 		button = require("containers/components/button");
 		---@type component_emoji
 		emoji = require("containers/components/emoji");
+		---@type component_textInput
+		textInput = require("containers/components/textInput");
+		---@type component_modal
+		modal = require("containers/components/modal");
 	};
 	---inject enchent libs into client
 	---@param client Client
