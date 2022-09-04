@@ -8,6 +8,10 @@ local channelMessageWithSource = enums.interactionResponseType.channelMessageWit
 local deferredUpdateMessage = enums.interactionResponseType.deferredUpdateMessage
 local componentButton = enums.componentType.button
 local updateMessage = enums.interactionResponseType.updateMessage
+local modal = enums.interactionResponseType.modal
+local messageComponent = enums.interactionType.messageComponent
+local applicationCommand = enums.interactionType.applicationCommand
+local modalSubmit = enums.interactionType.modalSubmit
 
 ---@class interaction
 ---@field public message Message If this is message's interaction (such as button), this is parent message of interaction else ApplicationCommand, this is nil
@@ -15,24 +19,30 @@ local updateMessage = enums.interactionResponseType.updateMessage
 ---@field public version number Always 1
 ---@field public token string token of this interaction
 ---@field public id string id of this interaction
----@field public buttonId string if this is button interaction, it will id of button
+---@field public buttonId string if this interaction is button, this value is id of button
+---@field public modalId string if this interaction is modal submit, this value is id of modal
 ---@field public type number type of this interaction
 ---@field public member Member if this interaction is actived on guild, it will member who created this interaction
 ---@field public channel Channel|TextChannel|GuildChannel|GuildTextChannel where this interaction is actived on channel
 ---@field public guild Guild where this interaction is actived on guild
----@return interaction interaction return new object
+---@field public isSlashCommand boolean true if this interaction is slash command
+---@field public isComponent boolean true if this interaction is message component
+---@field public isModal boolean true if this interaction is modal submit
+---@field public modalComponents table<number,table>|nil the values submitted by the user
 local interaction
 local interactionGetters
 interaction, interactionGetters = discordia.class('Interaction', snowflake)
 
 function interaction:__init(data, parent)
-	-- print(table.dump(data))
+	-- logger(table.dump(data))
 
 	local message = data.message
 	local messageType = message and message.type
+	local typeInteraction = data.type
 	local this = data.data
 	local componentType = this and this.component_type
-	local buttonId = this and componentType == componentButton and this.custom_id
+	local buttonId = typeInteraction == messageComponent and this and componentType == componentButton and this.custom_id
+	local modalId = typeInteraction == modalSubmit and this and this.custom_id
 
 	local member = data.member
 	local user = data.user
@@ -64,12 +74,16 @@ function interaction:__init(data, parent)
 	self._channel = channelObject
 	self._member = memberObject
 	self._buttonId = buttonId
+	self._modalId = modalId
+	self._modalComponents = modalId and this.components
 	self._id = data.id
 	self._parent = parent
 	self._type = data.type
 	self._token = data.token
 	self._version = data.version
-	self._isComponent = componentType ~= nil
+	self._isComponent = typeInteraction == messageComponent
+	self._isSlashCommand = typeInteraction == applicationCommand
+	self._isModal = typeInteraction == modalSubmit
 	self._message =  messageObject
 	self._parentInteraction = messageType == 20 and interaction(message.interaction,parent);
 end
@@ -82,14 +96,14 @@ function interaction:createResponse(type, data)
 	self._type = type
 
 	-- local api = self.parent._api;
-	self.parent._api:request('POST', format(endpoints.INTERACTION_RESPONSE, self._id, self._token), {
+	return self.parent._api:request('POST', format(endpoints.INTERACTION_RESPONSE, self._id, self._token), {
 		type = type,
 		data = data,
 	})
 	-- p(api:request('GET',format(endpoints.GET_ORIGINAL_INTERACTION_RESPONSE, self._id, self._token)))
 end
 function interaction:createFollowup(data)
-	self.parent._api:request('POST', format(endpoints.INTERACTION_FOLLOWUP_CREATE, self._id, self._token), data)
+	return self.parent._api:request('POST', format(endpoints.INTERACTION_FOLLOWUP_CREATE, self._id, self._token), data)
 end
 
 ---Send act response.
@@ -113,7 +127,7 @@ local function copyData(data,isTable)
 	return data
 end
 
-local insert = table.insert;
+local insert = table.insert
 ---Create reply message.
 ---@param data table table of datas, same with message data
 ---@param private boolean|nil set reply is only can see by called user
@@ -151,6 +165,20 @@ function interaction:reply(data, private)
 	return self:createResponse(channelMessageWithSource, data)
 end
 
+---Create modal.
+---@param custom_id string|component_modal id of modal, but you can but modal component too
+---@param title string|nil title of modal
+---@param data table|nil modal datas (components)
+---@return boolean
+function interaction:modal(custom_id,title,data)
+	if type(title) == "table" then
+		data = title;
+	else
+		data = { title = title, custom_id = custom_id, components = data };
+	end
+ 	return self:createResponse(modal, data)
+end
+
 ---Update reply message.
 ---@param data table table of datas, same with message data
 ---@return boolean
@@ -159,22 +187,23 @@ function interaction:update(data)
 		data = {
 			content = data
 		}
+	else data = copyData(data)
 	end
 
-	local embed = data.embed;
+	local embed = data.embed
 	if embed then
-		local embeds = data.embeds;
+		local embeds = data.embeds
 		if not embeds then
-			embeds = {};
-			data.embeds = embeds;
+			embeds = {}
+			data.embeds = embeds
 		end
 		if next(embed) then
-			insert(embeds,1,embed);
+			insert(embeds,1,embed)
 		end
 	end
 
 	if self._isComponent then -- if it is component
-		return self:createResponse(updateMessage,data);
+		return self:createResponse(updateMessage,data)
 	end
 	return self._parent._api:request('PATCH', format(endpoints.INTERACTION_RESPONSE_MODIFY, self._parent._slashid, self._token), data)
 end
@@ -260,6 +289,10 @@ function interactionGetters:buttonId()
 	return self._buttonId
 end
 
+function interactionGetters:modalId()
+	return self._modalId
+end
+
 function interactionGetters:id()
 	return self._id
 end
@@ -282,6 +315,18 @@ end
 
 function interactionGetters:isComponent()
 	return self._isComponent
+end
+
+function interactionGetters:isSlashCommand()
+	return self._isSlashCommand
+end
+
+function interactionGetters:isModal()
+	return self._isModal
+end
+
+function interactionGetters:modalComponents()
+	return self._modalComponents;
 end
 
 function interactionGetters:parentInteraction()

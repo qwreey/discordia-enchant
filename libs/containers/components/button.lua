@@ -40,7 +40,7 @@ local warp = coroutine.wrap;
 
 local evnetHandler = require("../../eventHandler");
 evnetHandler.make("INTERACTION_CREATE",function (data, client)
-	if data.type == messageComponent then -- button
+	if data.type == messageComponent and data.data.component_type == button then -- button
 		local new = interaction(data,client);
 		local buttonId = new.buttonId;
 		warp(runBindings)(buttonId,new);

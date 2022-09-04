@@ -23,6 +23,7 @@ local export = {
 		applicationCommand = 2;
 		messageComponent = 3;
 		applicationCommandAutocomplete = 4;
+		modalSubmit = 5;
 	});
 	interactionResponseType = enum({
 		pong = 1;
@@ -31,6 +32,7 @@ local export = {
 		deferredUpdateMessage = 6;
 		updateMessage = 7;
 		applicationCommandAutocompleteResult = 8;
+		modal = 9;
 	});
 
 	---@class enchent_enums_componentType_child:number
@@ -38,10 +40,12 @@ local export = {
 	---@field public actionRow enchent_enums_componentType_child 1
 	---@field public button enchent_enums_componentType_child 2
 	---@field public selectMenu enchent_enums_componentType_child 3
+	---@field public textInput enchent_enums_componentType_child 4
 	componentType = enum({
 		actionRow = 1;
 		button = 2;
 		selectMenu = 3;
+		textInput = 4;
 	});
 
 	---@class enchent_enums_buttonStyle_child:number
@@ -57,6 +61,15 @@ local export = {
 		success = 3;
 		danger = 4;
 		link = 5;
+	});
+
+	---@class enchent_enums_textInputStyle_child:number
+	---@class enchent_enums_textInputStyle
+	---@field public short enchent_enums_textInputStyle_child A single-line input
+	---@field public paragraph enchent_enums_textInputStyle_child A multi-line input
+	textInputStyle = enum({
+		short = 1;
+		paragraph = 2;
 	});
 };
 

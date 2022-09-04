@@ -1,10 +1,10 @@
 ---Handler for actionRow component
 ---@class component_emoji:string
 local this = {};
-local enums = require("../../enums");
-local actionRow = enums.componentType.actionRow;
+-- local enums = require("../../enums");
+-- local actionRow = enums.componentType.actionRow;
 
----@class enchent_button_props:table
+---@class enchent_emoji_props:table
 ---@field public id Snowflake|nil emoji id
 ---@field public name string|nil (can be null only in reaction emoji objects) emoji name
 
@@ -16,7 +16,7 @@ local actionRow = enums.componentType.actionRow;
 -- available?	boolean	whether this emoji can be used, may be false due to loss of Server Boosts
 
 ---Create new emoji object
----@param emojiObject enchent_button_props|string table that containing emoji data
+---@param emojiObject enchent_emoji_props|string table that containing emoji data
 ---@return component_emoji
 function this.new(emojiObject)
 	if type(emojiObject) == "string" then

@@ -57,10 +57,12 @@ local function send(self,content)
 		local tbl = content
 		content = tbl.content
 
-		if type(tbl.code) == 'string' then
-			content = format('```%s\n%s\n```', tbl.code, content)
-		elseif tbl.code == true then
-			content = format('```\n%s\n```', content)
+		if content then
+			if type(tbl.code) == 'string' then
+				content = format('```%s\n%s\n```', tbl.code, content)
+			elseif tbl.code == true then
+				content = format('```\n%s\n```', content)
+			end
 		end
 
 		local mentions
@@ -81,7 +83,7 @@ local function send(self,content)
 			end
 		end
 
-		if mentions then
+		if mentions and content then
 			insert(mentions, content)
 			content = concat(mentions, ' ')
 		end
@@ -114,13 +116,15 @@ local function send(self,content)
 		end
 
 		data, err = self.client._api:createMessage(self._id, {
-			content = content,
+			content = (not tbl.title) and content or nil,
 			tts = tbl.tts,
 			nonce = tbl.nonce,
 			embed = tbl.embed,
 			message_reference = refMessage,
 			allowed_mentions = refMention,
 			components = tbl.components,
+			title = tbl.title,
+			custom_id = tbl.custom_id,
 		}, files)
 
 	else
