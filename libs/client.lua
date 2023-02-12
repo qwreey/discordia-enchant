@@ -36,6 +36,7 @@ local defaultOptions = {
 	gatewayFile = 'gateway.json',
 	dateTime = '%F %T',
 	syncGuilds = false,
+	gatewayIntents = 3243773, -- all non-privileged intents
 	wssProps = {},
 }
 
@@ -85,4 +86,5 @@ function Client:__init(options)
 	self._emoji_map = {}
 	self._channel_map = {}
 	self._events = require('discordia/libs/client/EventHandler')
+	self._intents = options.gatewayIntents
 end
