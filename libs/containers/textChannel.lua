@@ -120,6 +120,7 @@ local function send(self,content)
 			tts = tbl.tts,
 			nonce = tbl.nonce,
 			embed = tbl.embed,
+			embeds = tbl.embeds,
 			message_reference = refMessage,
 			allowed_mentions = refMention,
 			components = tbl.components,
